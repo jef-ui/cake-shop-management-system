@@ -68,7 +68,7 @@
     var el = document.getElementById("proto-banner");
     if (!el) return;
     el.className = "proto-banner";
-    el.innerHTML = '<strong>Prototype Preview</strong> — This is a static, click-through UI mockup for My Sweets by Jesha. No real backend, data, or login — for design/demo purposes only.';
+    el.innerHTML = '<strong>PROTOTYPE PREVIEW</strong> - No real backend, data, or login';
   }
 
   function renderSidebar(activeHref) {
