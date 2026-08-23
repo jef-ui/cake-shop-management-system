@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — My Sweets by Jesha (Prototype)</title>
+<link rel="icon" href="images/mysweets.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="proto-banner" id="proto-banner"></div>
+
+<div class="auth-shell">
+  <div class="auth-brand">
+    <div class="blob1"></div>
+    <div class="blob2"></div>
+    <div class="top">
+      <img src="images/mysweets.png" alt="My Sweets by Jesha">
+      <span class="font-script" style="font-size:1.4rem;">My Sweets<br><span style="font-size:0.7rem;font-weight:400;">By Jesha</span></span>
+    </div>
+    <div class="mid">
+      <h1 class="font-script">My Sweets,<br>By Jesha</h1>
+      <p>Cake Shop and Supplies Management System</p>
+    </div>
+    <div class="bottom">&copy; 2026 My Sweets by Jesha</div>
+  </div>
+
+  <div class="auth-form">
+    <div class="auth-form-inner">
+      <div class="mobile-brand">
+        <img src="images/mysweets.png" alt="My Sweets by Jesha">
+        <span class="font-script" style="font-size:1.4rem;color:var(--brand-600);">My Sweets</span>
+      </div>
+      <h2>Welcome back</h2>
+      <p class="lead">Log in to manage your shop.</p>
+
+      <div class="demo-box">
+        <strong>Prototype note:</strong> this is a UI mockup — type anything and hit "Log in" to continue.
+      </div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="jfree@webdev">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••••••">
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;font-size:0.8rem;color:var(--gray-500);">
+          <label style="display:flex;align-items:center;gap:0.4rem;font-weight:400;margin:0;"><input type="checkbox" style="width:auto;"> Remember me</label>
+          <a href="#" style="color:var(--brand-600);font-weight:600;">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

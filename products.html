@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — My Sweets by Jesha (Prototype)</title>
+<link rel="icon" href="images/mysweets.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="proto-banner" id="proto-banner"></div>
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-col">
+    <div id="topbar-mount"></div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <h2>Products</h2>
+          <p class="sub">Manage your cake shop catalog — recipe-based and direct-stock items.</p>
+        </div>
+        <button class="btn btn-primary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          Add Product
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <input type="search" placeholder="Search by name or SKU...">
+          <select><option>All categories</option><option>Cakes</option><option>Accessories</option><option>Packaging</option><option>Ingredients</option></select>
+          <select><option>All types</option><option>Recipe-based</option><option>Direct stock</option></select>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Type</th><th>Price</th><th>Stock</th><th></th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span id="countLabel"></span>
+          <div class="pages"><span class="active">1</span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot-note">My Sweets by Jesha — Prototype Preview</footer>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>
+PROTO_INIT_SHELL('products.html', 'Products');
+var rows = document.getElementById('rows');
+document.getElementById('countLabel').textContent = 'Showing ' + PROTO_DATA.products.length + ' of ' + PROTO_DATA.products.length + ' products';
+PROTO_DATA.products.forEach(function (p) {
+  var low = p.stock <= 10;
+  var thumb = p.img
+    ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" style="width:36px;height:36px;border-radius:0.5rem;object-fit:cover;flex-shrink:0;">'
+    : '<span style="width:36px;height:36px;border-radius:0.5rem;background:var(--brand-50);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">🍰</span>';
+  rows.innerHTML += '<tr>' +
+    '<td class="cell-strong"><div style="display:flex;align-items:center;gap:0.6rem;">' + thumb + '<span>' + p.name + '</span></div></td>' +
+    '<td class="cell-muted">' + p.sku + '</td>' +
+    '<td>' + p.category + '</td>' +
+    '<td><span class="badge ' + (p.type === 'Recipe-based' ? 'badge-blue' : 'badge-brand') + '">' + p.type + '</span></td>' +
+    '<td>₱' + p.price.toLocaleString() + '</td>' +
+    '<td>' + (low ? '<span class="badge badge-yellow">' + p.stock + ' left</span>' : p.stock) + '</td>' +
+    '<td><div class="row-actions"><button class="icon-btn" title="Print QR Label">' + PROTO_ICON('printer') + '</button><button class="icon-btn">' + PROTO_ICON('pencil') + '</button><button class="icon-btn">' + PROTO_ICON('trash') + '</button></div></td>' +
+    '</tr>';
+});
+</script>
+</body>
+</html>

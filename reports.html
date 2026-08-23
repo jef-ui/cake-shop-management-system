@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — My Sweets by Jesha (Prototype)</title>
+<link rel="icon" href="images/mysweets.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="proto-banner" id="proto-banner"></div>
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-col">
+    <div id="topbar-mount"></div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <h2>Reports</h2>
+          <p class="sub">Sales, inventory, and profit reports — exportable to PDF and Excel.</p>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Sales Report</div>
+        <div class="tab">Inventory Report</div>
+        <div class="tab">Profit Margin</div>
+        <div class="tab">Best Sellers</div>
+      </div>
+
+      <div class="card">
+        <div class="toolbar">
+          <input type="date" value="2026-08-01">
+          <span style="color:var(--gray-400);font-size:0.85rem;">to</span>
+          <input type="date" value="2026-08-23">
+          <select><option>All branches</option></select>
+          <div style="margin-left:auto;display:flex;gap:0.5rem;">
+            <button class="btn btn-secondary btn-sm" type="button">Export PDF</button>
+            <button class="btn btn-secondary btn-sm" type="button">Export Excel</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" style="margin-bottom:1.25rem;">
+          <div class="stat-card"><p class="label">Total Sales</p><p class="value">₱28,940</p></div>
+          <div class="stat-card"><p class="label">Transactions</p><p class="value">62</p></div>
+          <div class="stat-card"><p class="label">Avg. Sale Value</p><p class="value">₱467</p></div>
+          <div class="stat-card"><p class="label">Gross Margin</p><p class="value">41%</p></div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Date</th><th>Sales</th><th>Transactions</th><th>Avg. Value</th></tr></thead>
+            <tbody>
+              <tr><td>Aug 23, 2026</td><td>₱4,255</td><td>9</td><td>₱473</td></tr>
+              <tr><td>Aug 22, 2026</td><td>₱5,120</td><td>11</td><td>₱465</td></tr>
+              <tr><td>Aug 21, 2026</td><td>₱3,890</td><td>8</td><td>₱486</td></tr>
+              <tr><td>Aug 20, 2026</td><td>₱4,610</td><td>10</td><td>₱461</td></tr>
+              <tr><td>Aug 19, 2026</td><td>₱3,215</td><td>7</td><td>₱459</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <footer class="foot-note">My Sweets by Jesha — Prototype Preview</footer>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>PROTO_INIT_SHELL('reports.html', 'Reports');</script>
+</body>
+</html>

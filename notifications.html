@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications — My Sweets by Jesha (Prototype)</title>
+<link rel="icon" href="images/mysweets.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="proto-banner" id="proto-banner"></div>
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-col">
+    <div id="topbar-mount"></div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <h2>Notifications</h2>
+          <p class="sub">Low stock alerts, order updates, and due-date reminders.</p>
+        </div>
+        <button class="btn btn-secondary" type="button">Mark all as read</button>
+      </div>
+
+      <div class="card" style="padding:0;">
+        <div id="list"></div>
+      </div>
+    </div>
+    <footer class="foot-note">My Sweets by Jesha — Prototype Preview</footer>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>
+PROTO_INIT_SHELL('notifications.html', 'Notifications');
+var FULL_NOTIFS = [
+  { icon: '⚠️', text: 'Low stock: Chocolate Ganache (2 kg left)', time: '10 min ago', unread: true },
+  { icon: '📅', text: 'Order ORD-00042 is due tomorrow', time: '1 hour ago', unread: true },
+  { icon: '🎂', text: 'New custom order from Maria Cruz', time: '3 hours ago', unread: true },
+  { icon: '📦', text: 'Stock replenished: Vanilla Extract', time: 'Yesterday', unread: false },
+  { icon: '🧾', text: 'Sale SALE-00117 completed by Cashier One', time: 'Yesterday', unread: false },
+  { icon: '⚠️', text: 'Low stock: Fresh Cream (1.5 L left)', time: '2 days ago', unread: false },
+  { icon: '✅', text: 'Order ORD-00039 marked as Ready', time: '3 days ago', unread: false }
+];
+var list = document.getElementById('list');
+FULL_NOTIFS.forEach(function (n, i) {
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:0.85rem;align-items:flex-start;padding:1rem 1.25rem;' + (i < FULL_NOTIFS.length - 1 ? 'border-bottom:1px solid var(--gray-100);' : '') + (n.unread ? 'background:var(--brand-50);' : '');
+  row.innerHTML = '<span style="font-size:1.2rem;">' + n.icon + '</span>' +
+    '<div style="flex:1;"><p style="margin:0;font-size:0.87rem;color:var(--gray-800);">' + n.text + '</p>' +
+    '<p style="margin:0.2rem 0 0;font-size:0.75rem;color:var(--gray-400);">' + n.time + '</p></div>' +
+    (n.unread ? '<span style="width:8px;height:8px;border-radius:999px;background:var(--brand-500);margin-top:0.4rem;"></span>' : '');
+  list.appendChild(row);
+});
+</script>
+</body>
+</html>

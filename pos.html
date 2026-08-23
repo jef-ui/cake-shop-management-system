@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POS — My Sweets by Jesha (Prototype)</title>
+<link rel="icon" href="images/mysweets.png">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .scan-note { display:none; background:var(--brand-50); color:var(--brand-700); border:1px solid var(--brand-100); border-radius:0.7rem; padding:0.8rem 1rem; font-size:0.8rem; margin-bottom:0.85rem; align-items:center; justify-content:space-between; gap:1rem; }
+  .scan-note.open { display:flex; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(17,24,39,0.5); align-items:center; justify-content:center; padding:1rem; z-index:70; }
+  .modal-overlay.open { display:flex; }
+  .modal-box { background:#fff; border-radius:0.9rem; padding:1.5rem; width:100%; max-width:26rem; box-shadow:0 20px 50px rgba(17,24,39,0.25); }
+</style>
+</head>
+<body>
+<div class="proto-banner" id="proto-banner"></div>
+<div class="app-shell">
+  <div id="sidebar-mount"></div>
+  <div class="main-col">
+    <div id="topbar-mount"></div>
+    <div class="page-content" style="max-width:1300px;">
+      <div class="page-header">
+        <div>
+          <h2>Point of Sale</h2>
+          <p class="sub">Tap a product to add it to the cart, or scan a QR code.</p>
+        </div>
+        <button class="btn btn-secondary" type="button" id="scanBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5V6A2.25 2.25 0 016 3.75h1.5M16.5 3.75H18A2.25 2.25 0 0120.25 6v1.5M20.25 16.5V18A2.25 2.25 0 0118 20.25h-1.5M7.5 20.25H6A2.25 2.25 0 013.75 18v-1.5M3.75 12h16.5"/></svg>
+          Scan QR
+        </button>
+      </div>
+
+      <div id="scanNote" class="scan-note">
+        <span>📷 <strong>Prototype simulation</strong> — a real camera scanner isn't wired up here. Click "Simulate Scan" to add a random product to the cart.</span>
+        <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+          <button class="btn btn-primary btn-sm" id="simulateScanBtn" type="button">Simulate Scan</button>
+          <button class="btn btn-secondary btn-sm" id="closeScanBtn" type="button">Close</button>
+        </div>
+      </div>
+
+      <div class="pos-layout">
+        <div>
+          <div class="toolbar">
+            <input type="search" id="posSearch" placeholder="Search products...">
+            <select id="posCategory"><option>All categories</option><option>Cakes</option><option>Accessories</option><option>Packaging</option><option>Ingredients</option></select>
+          </div>
+          <div class="pos-grid" id="posGrid"></div>
+        </div>
+
+        <div class="cart-panel">
+          <h3 style="margin:0 0 0.75rem;font-size:0.95rem;">Cart</h3>
+          <div id="cartItems"></div>
+          <p id="emptyCart" style="font-size:0.8rem;color:var(--gray-400);text-align:center;padding:1.2rem 0;">Cart is empty. Add a product to get started.</p>
+
+          <div class="field" style="margin-top:0.9rem;">
+            <label>Customer (optional)</label>
+            <select id="customerSelect">
+              <option value="">Walk-in</option>
+              <option>Maria Cruz</option>
+              <option>Jose Reyes</option>
+              <option>Anna Bautista</option>
+            </select>
+          </div>
+
+          <div class="cart-totals">
+            <div class="row"><span>Subtotal</span><span id="sumSubtotal">₱0.00</span></div>
+            <div class="row"><span>Discount</span><span id="sumDiscount">₱0.00</span></div>
+            <div class="row"><span>Tax</span><span id="sumTax">₱0.00</span></div>
+            <div class="row grand"><span>Total</span><span id="sumTotal">₱0.00</span></div>
+          </div>
+          <button class="btn btn-primary btn-lg" id="checkoutBtn" style="margin-top:0.9rem;" disabled>Checkout</button>
+        </div>
+      </div>
+    </div>
+    <footer class="foot-note">My Sweets by Jesha — Prototype Preview</footer>
+  </div>
+</div>
+
+<!-- Out of stock modal -->
+<div class="modal-overlay" id="oosModal">
+  <div class="modal-box">
+    <div style="display:flex;gap:0.75rem;align-items:flex-start;">
+      <span style="width:2.5rem;height:2.5rem;border-radius:999px;background:#fef2f2;color:#b91c1c;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:1.25rem;height:1.25rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+      </span>
+      <div>
+        <h3 style="margin:0;font-size:0.95rem;">Out of Stock</h3>
+        <p style="margin:0.3rem 0 0;font-size:0.85rem;color:var(--gray-500);"><span id="oosName" style="font-weight:600;color:var(--gray-700);"></span> has no available stock left to add to the cart.</p>
+      </div>
+    </div>
+    <div style="margin-top:1.2rem;text-align:right;">
+      <button class="btn btn-secondary" id="oosCloseBtn" type="button">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+    <h3 style="margin:0 0 1rem;font-size:1rem;">Checkout</h3>
+    <div class="field">
+      <label>Payment Method</label>
+      <select id="paymentMethod">
+        <option>Cash</option><option>Card</option><option>GCash</option><option>Bank Transfer</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Amount Tendered</label>
+      <input type="number" id="amountTendered" placeholder="0.00">
+    </div>
+    <div class="cart-totals" style="margin-top:0;">
+      <div class="row"><span>Total Due</span><span id="modalTotal">₱0.00</span></div>
+      <div class="row grand"><span>Change</span><span id="modalChange">₱0.00</span></div>
+    </div>
+    <div style="display:flex;gap:0.6rem;margin-top:1.2rem;">
+      <button class="btn btn-secondary" id="cancelCheckoutBtn" type="button" style="flex:1;justify-content:center;">Cancel</button>
+      <button class="btn btn-primary" id="confirmCheckoutBtn" type="button" style="flex:1;justify-content:center;">Complete Sale</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box" style="text-align:center;">
+    <span style="width:3rem;height:3rem;border-radius:999px;background:#ecfdf5;color:#047857;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1.5rem;height:1.5rem;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+    </span>
+    <h3 style="margin:0 0 0.3rem;">Sale Completed</h3>
+    <p style="margin:0 0 1.2rem;font-size:0.85rem;color:var(--gray-500);">Stock has been deducted and the receipt is ready.</p>
+    <div style="display:flex;gap:0.6rem;">
+      <a class="btn btn-secondary" href="sales.html" style="flex:1;justify-content:center;">View Sales</a>
+      <button class="btn btn-primary" id="newSaleBtn" type="button" style="flex:1;justify-content:center;">New Sale</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+PROTO_INIT_SHELL('pos.html', 'Point of Sale');
+
+var EMOJI = { 'Cakes': '🎂', 'Accessories': '🎀', 'Packaging': '📦', 'Ingredients': '🥣' };
+var cart = [];
+var grid = document.getElementById('posGrid');
+
+function renderGrid() {
+  var q = document.getElementById('posSearch').value.toLowerCase();
+  var cat = document.getElementById('posCategory').value;
+  grid.innerHTML = '';
+  PROTO_DATA.products.forEach(function (p, idx) {
+    if (q && p.name.toLowerCase().indexOf(q) === -1) return;
+    if (cat && cat !== 'All categories' && p.category !== cat) return;
+    var btn = document.createElement('button');
+    btn.className = 'pos-product';
+    btn.type = 'button';
+    var thumb = p.img
+      ? '<div class="thumb" style="background:#fff;padding:0;overflow:hidden;"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>'
+      : '<div class="thumb">' + (EMOJI[p.category] || '🍰') + '</div>';
+    btn.innerHTML = thumb +
+      '<div class="name">' + p.name + '</div>' +
+      '<div class="price">₱' + p.price.toLocaleString() + '</div>' +
+      '<div class="stock">' + p.stock + ' in stock</div>';
+    btn.addEventListener('click', function () { addToCart(idx); });
+    grid.appendChild(btn);
+  });
+}
+
+function stockRemaining(idx) {
+  var p = PROTO_DATA.products[idx];
+  var inCart = cart.filter(function (c) { return c.idx === idx; }).reduce(function (s, c) { return s + c.qty; }, 0);
+  return p.stock - inCart;
+}
+
+function addToCart(idx) {
+  var p = PROTO_DATA.products[idx];
+  if (stockRemaining(idx) <= 0) {
+    document.getElementById('oosName').textContent = p.name;
+    document.getElementById('oosModal').classList.add('open');
+    return;
+  }
+  var existing = cart.find(function (c) { return c.idx === idx; });
+  if (existing) { existing.qty++; } else { cart.push({ idx: idx, qty: 1 }); }
+  renderCart();
+}
+
+function renderCart() {
+  var wrap = document.getElementById('cartItems');
+  var empty = document.getElementById('emptyCart');
+  wrap.innerHTML = '';
+  empty.style.display = cart.length ? 'none' : 'block';
+  var subtotal = 0;
+  cart.forEach(function (c, i) {
+    var p = PROTO_DATA.products[c.idx];
+    var lineTotal = p.price * c.qty;
+    subtotal += lineTotal;
+    var row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = '<div class="info"><div class="n">' + p.name + '</div><div class="p">₱' + p.price.toLocaleString() + ' x ' + c.qty + '</div></div>' +
+      '<div class="qty-stepper">' +
+      '<button type="button" data-act="dec" data-i="' + i + '">-</button>' +
+      '<span>' + c.qty + '</span>' +
+      '<button type="button" data-act="inc" data-i="' + i + '">+</button>' +
+      '</div>';
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll('button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var i = parseInt(b.getAttribute('data-i'), 10);
+      if (b.getAttribute('data-act') === 'inc') {
+        addToCart(cart[i].idx);
+      } else {
+        cart[i].qty--;
+        if (cart[i].qty <= 0) cart.splice(i, 1);
+        renderCart();
+      }
+    });
+  });
+
+  var discount = 0, tax = 0;
+  var total = subtotal - discount + tax;
+  document.getElementById('sumSubtotal').textContent = '₱' + subtotal.toFixed(2);
+  document.getElementById('sumDiscount').textContent = '₱' + discount.toFixed(2);
+  document.getElementById('sumTax').textContent = '₱' + tax.toFixed(2);
+  document.getElementById('sumTotal').textContent = '₱' + total.toFixed(2);
+  document.getElementById('checkoutBtn').disabled = cart.length === 0;
+  return total;
+}
+
+document.getElementById('posSearch').addEventListener('input', renderGrid);
+document.getElementById('posCategory').addEventListener('change', renderGrid);
+
+document.getElementById('scanBtn').addEventListener('click', function () {
+  document.getElementById('scanNote').classList.toggle('open');
+});
+document.getElementById('closeScanBtn').addEventListener('click', function () {
+  document.getElementById('scanNote').classList.remove('open');
+});
+document.getElementById('simulateScanBtn').addEventListener('click', function () {
+  var idx = Math.floor(Math.random() * PROTO_DATA.products.length);
+  addToCart(idx);
+});
+document.getElementById('oosCloseBtn').addEventListener('click', function () {
+  document.getElementById('oosModal').classList.remove('open');
+});
+
+document.getElementById('checkoutBtn').addEventListener('click', function () {
+  var total = renderCart();
+  document.getElementById('modalTotal').textContent = '₱' + total.toFixed(2);
+  document.getElementById('modalChange').textContent = '₱0.00';
+  document.getElementById('amountTendered').value = '';
+  document.getElementById('checkoutModal').classList.add('open');
+});
+document.getElementById('cancelCheckoutBtn').addEventListener('click', function () {
+  document.getElementById('checkoutModal').classList.remove('open');
+});
+document.getElementById('amountTendered').addEventListener('input', function () {
+  var total = parseFloat(document.getElementById('modalTotal').textContent.replace('₱', '')) || 0;
+  var tendered = parseFloat(this.value) || 0;
+  var change = Math.max(0, tendered - total);
+  document.getElementById('modalChange').textContent = '₱' + change.toFixed(2);
+});
+document.getElementById('confirmCheckoutBtn').addEventListener('click', function () {
+  document.getElementById('checkoutModal').classList.remove('open');
+  document.getElementById('successModal').classList.add('open');
+});
+document.getElementById('newSaleBtn').addEventListener('click', function () {
+  cart = [];
+  renderCart();
+  document.getElementById('successModal').classList.remove('open');
+});
+
+renderGrid();
+renderCart();
+</script>
+</body>
+</html>
